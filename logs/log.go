@@ -18,7 +18,7 @@ type loggerType func() LoggerInterface
 
 type LoggerInterface interface {
 	Init(l string) error
-	Write(msg string, level int) error
+	WriteMsg(msg string, level int) error
 	Destory()
 }
 
@@ -106,7 +106,7 @@ func (cl *CaffLogger) write(level int, msg string) error {
 		msg = fmt.Sprintf("[%s:%d] %s", filename, line, msg)
 	}
 	for name, l := range cl.outputs {
-		err := l.Write(msg, level)
+		err := l.WriteMsg(msg, level)
 		if err != nil {
 			fmt.Println("unable to write to adapter:", name, err)
 			return err

@@ -42,7 +42,7 @@ func (cr *ControllerRegistor) Add(pattern string, c ControllerInterface) {
 		}
 	}
 	pattern = strings.Join(parts, "/")
-	CaffLogger.Debug(pattern)
+	Debug(pattern)
 	regex, regexErr := regexp.Compile(pattern)
 	if regexErr != nil {
 		panic(regexErr)
@@ -59,7 +59,7 @@ func (cr *ControllerRegistor) Add(pattern string, c ControllerInterface) {
 // Implement a Handler interface
 func (cr *ControllerRegistor) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Server", "HTTP File Storage")
-	w.Header().Set("Author", "Tang Jizhong")
+	w.Header().Set("Author", "TANGJIZHONG")
 	var started bool
 	// Set the static directory
 	for prefix, staticPath := range StaticPath {

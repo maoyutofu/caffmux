@@ -18,6 +18,11 @@ func SetLevel(l int) {
 	CaffLogger.SetLevel(l)
 }
 
+func SetLogFuncCall(b bool) {
+	CaffLogger.SetEnableFuncCallDepth(b)
+	CaffLogger.SetLoggerFuncCallDepth(3)
+}
+
 func SetLogger(adapter string, jsonconf string) error {
 	err := CaffLogger.SetLogger(adapter, jsonconf)
 	if err != nil {
