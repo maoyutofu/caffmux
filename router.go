@@ -61,6 +61,15 @@ func (cr *ControllerRegistor) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 	w.Header().Set("Server", "HTTP File Storage")
 	w.Header().Set("Author", "Tang Jizhong")
 	var started bool
+	// Set the static directory
+	for prefix, staticPath := range StaticPath {
+		if strings.HasPrefix(r.URL.Path, prefix) {
+			file := staticPath + r.URL.Path(len(prefix):)
+			http.ServeFile(w, r, file)
+			started = true
+			return
+		}
+	}
 	requestPath := r.URL.Path
 	CaffLogger.Debug(requestPath)
 	for _, route := range cr.routers {

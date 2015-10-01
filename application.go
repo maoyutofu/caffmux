@@ -7,6 +7,10 @@ import (
 	"net/http"
 )
 
+var (
+	StaticPath map[string]string
+)
+
 // Initialize the related, such as log initialize...
 func init() {
 	CaffLogger = logs.NewLogger()
@@ -24,6 +28,11 @@ type Application struct {
 func NewApplication() *Application {
 	cr := NewControllerRegistor()
 	return &Application{cr}
+}
+
+func (app *Application) addStaticPath(url string, path string) *Application {
+	StaticPath[url] = path
+	return app
 }
 
 // Run the HTTP service, addr for listening on port, such as :8080
