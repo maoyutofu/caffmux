@@ -105,54 +105,63 @@ func (cr *ControllerRegistor) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 			actionName = actionNames[1]
 		} else {
 			actionNames = strings.Split(requestPath, "/")
-			if len(actionNames) > 1 && actionNames[1] != "" {
-				actionName = actionNames[1]
+			length := len(actionNames)
+			if length > 1 && actionNames[length-1] != "" {
+				actionName = actionNames[length-1]
 			}
 		}
+		CaffLogger.Debug("actionName = " + actionName)
 		if actionName != "" {
-			CaffLogger.Debug(actionName)
 			numMethod := c.NumMethod()
 			t := c.Type()
 			// Iterate through all the methods
+			cFlag := false
 			for i := 0; i < numMethod; i++ {
-				CaffLogger.Debug(t.Method(i).Name)
 				// Implement actionName case-insensitive
 				if strings.ToUpper(t.Method(i).Name) == strings.ToUpper(actionName) {
+					cFlag = true
 					c.Method(i).Call(in)
 					break
 				}
 			}
-		} else {
-			method := c.MethodByName("Prepare")
-			method.Call(in)
-			if r.Method == "GET" {
-				method = c.MethodByName("Get")
-				method.Call(in)
-			} else if r.Method == "POST" {
-				method = c.MethodByName("Post")
-				method.Call(in)
-			} else if r.Method == "HEAD" {
-				method = c.MethodByName("Head")
-				method.Call(in)
-			} else if r.Method == "DELETE" {
-				method = c.MethodByName("Delete")
-				method.Call(in)
-			} else if r.Method == "PUT" {
-				method = c.MethodByName("Put")
-				method.Call(in)
-			} else if r.Method == "PATCH" {
-				method = c.MethodByName("Patch")
-				method.Call(in)
-			} else if r.Method == "OPTIONS" {
-				method = c.MethodByName("Options")
-				method.Call(in)
+			if !cFlag {
+				callMethod(r, c, in)
 			}
-			method = c.MethodByName("Finish")
-			method.Call(in)
+		} else {
+			callMethod(r, c, in)
 		}
 		started = true
 	}
 	if !started {
 		http.NotFound(w, r)
 	}
+}
+
+func callMethod(r *http.Request, c reflect.Value, in []reflect.Value) {
+	method := c.MethodByName("Prepare")
+	method.Call(in)
+	if r.Method == "GET" {
+		method = c.MethodByName("Get")
+		method.Call(in)
+	} else if r.Method == "POST" {
+		method = c.MethodByName("Post")
+		method.Call(in)
+	} else if r.Method == "HEAD" {
+		method = c.MethodByName("Head")
+		method.Call(in)
+	} else if r.Method == "DELETE" {
+		method = c.MethodByName("Delete")
+		method.Call(in)
+	} else if r.Method == "PUT" {
+		method = c.MethodByName("Put")
+		method.Call(in)
+	} else if r.Method == "PATCH" {
+		method = c.MethodByName("Patch")
+		method.Call(in)
+	} else if r.Method == "OPTIONS" {
+		method = c.MethodByName("Options")
+		method.Call(in)
+	}
+	method = c.MethodByName("Finish")
+	method.Call(in)
 }
