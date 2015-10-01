@@ -19,6 +19,7 @@ func init() {
 		fmt.Println("init console log error:", err)
 	}
 	CaffLogger.SetEnableFuncCallDepth(true)
+	StaticPath = make(map[string]string)
 }
 
 type Application struct {
