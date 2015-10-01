@@ -64,7 +64,7 @@ func (cr *ControllerRegistor) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 	// Set the static directory
 	for prefix, staticPath := range StaticPath {
 		if strings.HasPrefix(r.URL.Path, prefix) {
-			file := staticPath + r.URL.Path(len(prefix):)
+			file := staticPath + r.URL.Path[len(prefix):]
 			http.ServeFile(w, r, file)
 			started = true
 			return
