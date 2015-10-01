@@ -30,7 +30,8 @@ func NewApplication() *Application {
 	return &Application{cr}
 }
 
-func (app *Application) addStaticPath(url string, path string) *Application {
+// To add a static route
+func (app *Application) AddStaticPath(url string, path string) *Application {
 	StaticPath[url] = path
 	return app
 }
