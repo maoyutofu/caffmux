@@ -1,3 +1,4 @@
+// Package has realized the log and adaptation
 package logs
 
 import (
@@ -23,7 +24,7 @@ type LoggerInterface interface {
 
 var adapters = make(map[string]loggerType)
 
-//According to the different log output mode of adapter name to register
+// According to the different log output mode of adapter name to register
 func Register(name string, log loggerType) {
 	if log == nil {
 		panic("logs: Register provide is nil")
@@ -62,10 +63,12 @@ func (cl *CaffLogger) SetLoggerFuncCallDepth(d int) {
 func (cl *CaffLogger) GetLoggerFuncCallDepth() int {
 	return cl.loggerFuncCallDepth
 }
+
 func (cl *CaffLogger) SetEnableFuncCallDepth(b bool) {
 	cl.enableFuncCallDepth = b
 }
 
+// By specifying the name of the adapter to initialize a log object
 func (cl *CaffLogger) SetLogger(adapter string, jsonconf string) error {
 	if log, ok := adapters[adapter]; ok {
 		lg := log()
@@ -81,6 +84,7 @@ func (cl *CaffLogger) SetLogger(adapter string, jsonconf string) error {
 	return nil
 }
 
+// According to the adapter name removed from the log object
 func (cl *CaffLogger) DeleteLogger(adapter string) error {
 	if lg, ok := cl.outputs[adapter]; ok {
 		lg.Destory()
@@ -111,6 +115,7 @@ func (cl *CaffLogger) write(level int, msg string) error {
 	return nil
 }
 
+// Specifies the format of the output error log
 func (cl *CaffLogger) Error(format string, v ...interface{}) {
 	if LevelError > cl.level {
 		return
@@ -119,6 +124,7 @@ func (cl *CaffLogger) Error(format string, v ...interface{}) {
 	cl.write(LevelError, msg)
 }
 
+// Specifies the format of the output warning log
 func (cl *CaffLogger) Warning(format string, v ...interface{}) {
 	if LevelWarning > cl.level {
 		return
@@ -127,6 +133,7 @@ func (cl *CaffLogger) Warning(format string, v ...interface{}) {
 	cl.write(LevelWarning, msg)
 }
 
+// Specifies the format of the output info log
 func (cl *CaffLogger) Info(format string, v ...interface{}) {
 	if LevelInfo > cl.level {
 		return
@@ -135,6 +142,7 @@ func (cl *CaffLogger) Info(format string, v ...interface{}) {
 	cl.write(LevelInfo, msg)
 }
 
+// Specifies the format of the output debug log
 func (cl *CaffLogger) Debug(format string, v ...interface{}) {
 	if LevelDebug > cl.level {
 		return

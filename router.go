@@ -22,6 +22,7 @@ func NewControllerRegistor() *ControllerRegistor {
 	return &ControllerRegistor{}
 }
 
+// According to the rules set by the pattern to add a routing
 func (cr *ControllerRegistor) Add(pattern string, c ControllerInterface) {
 	parts := strings.Split(pattern, "/")
 	j := 0
@@ -29,6 +30,8 @@ func (cr *ControllerRegistor) Add(pattern string, c ControllerInterface) {
 	for i, part := range parts {
 		if strings.HasPrefix(part, ":") {
 			expr := "([^/]+)"
+			// eg: (?i)^/hello/:id([0-9]+)/:name(\\w+)
+			// The expression of extract parameter name and parameter values
 			if index := strings.Index(part, "("); index >= 3 {
 				expr = part[index:]
 				part = part[1:index]
@@ -53,6 +56,7 @@ func (cr *ControllerRegistor) Add(pattern string, c ControllerInterface) {
 	cr.routers = append(cr.routers, route)
 }
 
+// Implement a Handler interface
 func (cr *ControllerRegistor) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Server", "HTTP File Storage")
 	w.Header().Set("Author", "Tang Jizhong")
@@ -60,6 +64,7 @@ func (cr *ControllerRegistor) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 	requestPath := r.URL.Path
 	CaffLogger.Debug(requestPath)
 	for _, route := range cr.routers {
+		// Validation request path are legal
 		if !route.regex.MatchString(requestPath) {
 			continue
 		}
@@ -74,6 +79,7 @@ func (cr *ControllerRegistor) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 				values.Add(route.params[i], match)
 				params[route.params[i]] = match
 			}
+			// The restful style in the url query parameter combination
 			r.URL.RawQuery = url.Values(values).Encode() + "&" + r.URL.RawQuery
 		}
 		c := reflect.New(route.cType)
@@ -84,6 +90,7 @@ func (cr *ControllerRegistor) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 		init.Call(in)
 		in = make([]reflect.Value, 0)
 		actionName := ""
+		// Through the request path for the action name
 		actionNames := strings.Split(requestPath, "!")
 		if len(actionNames) > 1 && actionNames[1] != "" {
 			actionName = actionNames[1]
@@ -97,8 +104,10 @@ func (cr *ControllerRegistor) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 			CaffLogger.Debug(actionName)
 			numMethod := c.NumMethod()
 			t := c.Type()
+			// Iterate through all the methods
 			for i := 0; i < numMethod; i++ {
 				CaffLogger.Debug(t.Method(i).Name)
+				// Implement actionName case-insensitive
 				if strings.ToUpper(t.Method(i).Name) == strings.ToUpper(actionName) {
 					c.Method(i).Call(in)
 					break

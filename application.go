@@ -1,3 +1,4 @@
+// Package implementation controller and URL routing
 package caffmux
 
 import (
@@ -6,6 +7,7 @@ import (
 	"net/http"
 )
 
+// Initialize the related, such as log initialize...
 func init() {
 	CaffLogger = logs.NewLogger()
 	err := CaffLogger.SetLogger("console", "")
@@ -24,11 +26,13 @@ func NewApplication() *Application {
 	return &Application{cr}
 }
 
+// Run the HTTP service, addr for listening on port, such as :8080
 func (app *Application) Run(addr string) error {
 	CaffLogger.Debug(addr)
 	return http.ListenAndServe(addr, app.Handlers)
 }
 
+// Configuration controller URL routing rules, support for regular expressions
 func (app *Application) Router(path string, c ControllerInterface) *Application {
 	CaffLogger.Debug(path)
 	app.Handlers.Add(path, c)
