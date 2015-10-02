@@ -1,8 +1,8 @@
 package caffmux
 
 import (
-	"caffmux/logs"
 	"fmt"
+	"github.com/tjz101/caffmux/logs"
 	"net/http"
 )
 
