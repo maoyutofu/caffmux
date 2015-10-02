@@ -1,7 +1,7 @@
 package caffmux
 
 import (
-	"caffmux/logs"
+	"github.com/caffmux/logs"
 	"strings"
 )
 
