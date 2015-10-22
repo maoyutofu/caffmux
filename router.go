@@ -71,7 +71,7 @@ func (cr *ControllerRegistor) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 		}
 	}
 	requestPath := r.URL.Path
-	CaffLogger.Debug(requestPath)
+	Debug(requestPath)
 	for _, route := range cr.routers {
 		// Validation request path are legal
 		if !route.regex.MatchString(requestPath) {
@@ -110,7 +110,7 @@ func (cr *ControllerRegistor) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 				actionName = actionNames[length-1]
 			}
 		}
-		CaffLogger.Debug("actionName = " + actionName)
+		Debug("actionName = " + actionName)
 		if actionName != "" {
 			numMethod := c.NumMethod()
 			t := c.Type()
