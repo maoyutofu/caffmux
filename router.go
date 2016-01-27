@@ -58,8 +58,8 @@ func (cr *ControllerRegistor) Add(pattern string, c ControllerInterface) {
 
 // Implement a Handler interface
 func (cr *ControllerRegistor) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Server", "HTTP File Storage")
-	w.Header().Set("Author", "TANGJIZHONG")
+	w.Header().Set("Server", "caffmux")
+	w.Header().Set("Developer", "tangjizhong")
 	var started bool
 	// Set the static directory
 	for prefix, staticPath := range StaticPath {
