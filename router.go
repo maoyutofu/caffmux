@@ -58,7 +58,7 @@ func (cr *ControllerRegistor) Add(pattern string, c ControllerInterface) {
 
 // Implement a Handler interface
 func (cr *ControllerRegistor) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Server", "caffmux")
+	w.Header().Set("Server", "caffmux 1.0.0")
 	w.Header().Set("Developer", "tangjizhong")
 	var started bool
 	// Set the static directory
